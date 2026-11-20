@@ -13,6 +13,18 @@ A data engineering project that builds an ELT pipeline with **dbt** on **Snowfla
 - Reusable code with Jinja macros and the `dbt_utils` package
 - Seeds for small reference data
 
+
+## What I Learned
+
+1. **Layered data modeling**: I structured the pipeline into staging, dimension/fact and mart layers, so raw data is cleaned once and reused downstream instead of being reshaped in every query.
+2. **Incremental loading**: I built `fct_ratings` as an incremental model that only processes rows newer than the latest `rating_timestamp`, which avoids reloading the whole table on every run.
+3. **Tracking change over time**: I used a dbt snapshot with the timestamp strategy to keep the history of user tags, including handling deleted records.
+4. **Data quality testing**: I combined schema tests (not null, unique, relationships) with a custom Jinja macro and a singular test, so bad data gets caught before it reaches the marts.
+5. **Writing reusable, maintainable code**: I used Jinja macros, the `dbt_utils` package, seeds and ephemeral models to cut repetition and keep the SQL modular.
+
+
+
+
 ## Tech Stack
 
 - **dbt Core** (`dbt-snowflake`, built with dbt 1.9.6)
@@ -107,7 +119,3 @@ dbt snapshot    # run the tags snapshot
 dbt test        # run schema and singular tests
 dbt docs generate && dbt docs serve   # browse the docs and lineage graph
 ```
-
-## What I Learned
-
-<!-- Optional: add a short section about what you practiced (incremental models, snapshots, macros, testing, ...) -->
